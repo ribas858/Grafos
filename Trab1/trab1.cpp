@@ -69,7 +69,7 @@ void CriaListaAdj(vector<int>  grafo[]){
 	file.close();
 }
 // Essa funcao imprime na tela as listas de adjacencia em ordem decrescente de grau do vertice.
-void ImprimeDecrescente(vector<int> grafo[], int vert){
+void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 	vector<pair<int,int>> dueto;
 	int z = 0;
 	int grau=0;
@@ -81,12 +81,12 @@ void ImprimeDecrescente(vector<int> grafo[], int vert){
 	sort(dueto.begin(), dueto.end(), [](auto &a, auto &b) {
     	return a.second > b.second;
 	});
- 	cout << endl<< "Vertices de maior grau em ordem decrescente:" <<endl;
+ 	cout << endl<< "Vertices de MAIOR GRAU em ordem DECRESCENTE:" <<endl;
 	for (int w = 0; w < vert -1; ++w){
-        cout << "\n Lista de adjacencia do vertice: id "<< dueto[w].first;
+        cout << "\n Vertice id: "<< dueto[w].first;
 
         for (int j : grafo[dueto[w].first]){
-           cout << " -> " << j;
+           //cout << " -> " << j;
 					 grau++;
         }
 				cout << "\n grau: " << grau+1;
@@ -127,30 +127,28 @@ void ImprimeMaximal(vector<int> grafo[]){
     	return a.size() > b.size();
 	});
 	cout << endl;
-	cout << "Clique Maximal: ";
-	for(int i : Maximal[0]) {
-		cout << i << " ";
-	}
-	/*cout << endl << endl;
-	cout << "Clique Maximo diferente do Maximal: ";
-	for(int j : Maximal[1]){
-		cout << j << " ";
+	cout << "Cliques Maximais: "<< endl<< endl;
+	for (int j=0;j<35;j++){
+		cout << "Clique Maximal: "<< endl;
+		int h=0;
+		for(int i : Maximal[j]) {
+			cout << i << " ";
+			h++;
+			}
+			cout << endl <<"numero de vertices:" << h << endl << endl;
 	}
 	cout << endl << endl;
-	*/
-
 }
-
 int main(){
 	int vert = 35; // quantidade de vertices do grafo.
 	vector<int> grafo[vert]; // um vetor de vetor que será usado como lista de adjacencia.
 	vector<int> R,P,X; // vetores auxiliares para o algoritmo de BronKerbosch.
 	CriaListaAdj(grafo);
-	ImprimeDecrescente(grafo,vert);
+	ImprimeVerticeDecrescente(grafo,vert);
 	for (int i=1; i < vert; i++) {
     	P.push_back(i);
   }
   BronKerbosch(grafo,R,P,X);
-  //ImprimeMaximal(grafo);
+  ImprimeMaximal(grafo);
 	return 0;
 }
