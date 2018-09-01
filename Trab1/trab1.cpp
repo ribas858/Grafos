@@ -15,6 +15,7 @@
 	 */
 
 #include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
 vector<vector<int>> Maximal; // Esse vetor de vetor guarda os cliques maximais encontrados pelo algoritmo de Bron-Kerbosch.
@@ -140,15 +141,34 @@ void ImprimeMaximal(vector<int> grafo[]){
 	cout << endl << endl;
 }
 int main(){
+	int op=0;
 	int vert = 35; // quantidade de vertices do grafo.
 	vector<int> grafo[vert]; // um vetor de vetor que será usado como lista de adjacencia.
 	vector<int> R,P,X; // vetores auxiliares para o algoritmo de BronKerbosch.
 	CriaListaAdj(grafo);
-	ImprimeVerticeDecrescente(grafo,vert);
-	for (int i=1; i < vert; i++) {
-    	P.push_back(i);
-  }
-  BronKerbosch(grafo,R,P,X);
-  ImprimeMaximal(grafo);
+	for (int i=1; i < vert; i++)
+			P.push_back(i);
+
+	BronKerbosch(grafo,R,P,X);
+
+	cout << "Digite uma opção:" << endl;
+	cout << "(1) o vértice, e seu respectivo grau (para todos os vértices)" << endl;
+	cout << "(2) todos os cliques maximais (indicando o número de vértices e quais)" << endl;
+	cout << "(3) O Coeficiente de Aglomeração de cada vértice" << endl;
+	cout << "(4) O Coeficiente médio de Aglomeração do Grafo." << endl;
+	cin  >> op;
+	cin.ignore();
+	switch (op) {
+		case 1:
+				ImprimeVerticeDecrescente(grafo,vert);
+			break;
+		case 2:
+				ImprimeMaximal(grafo);
+			break;
+		case 3:
+			break;
+		case 4:
+			break;
+	}
 	return 0;
 }
