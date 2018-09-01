@@ -72,6 +72,7 @@ void CriaListaAdj(vector<int>  grafo[]){
 void ImprimeDecrescente(vector<int> grafo[], int vert){
 	vector<pair<int,int>> dueto;
 	int z = 0;
+	int grau=0;
 	for (int i = 1; i < vert; i++){
         z = grafo[i].size();
         dueto.push_back(pair<int,int>(i,z));
@@ -83,9 +84,13 @@ void ImprimeDecrescente(vector<int> grafo[], int vert){
  	cout << endl<< "Vertices de maior grau em ordem decrescente:" <<endl;
 	for (int w = 0; w < vert -1; ++w){
         cout << "\n Lista de adjacencia do vertice: id "<< dueto[w].first;
+
         for (int j : grafo[dueto[w].first]){
            cout << " -> " << j;
+					 grau++;
         }
+				cout << "\n grau: " << grau+1;
+				grau=0;
         cout << endl;
     }
 }
@@ -118,9 +123,9 @@ void BronKerbosch(vector<int> grafo[], vector<int> R , vector<int> P , vector<in
 }
 // Imprime na tela o clique maximal e um clique maximo diferente dele.
 void ImprimeMaximal(vector<int> grafo[]){
-	/*sort(Maximal.begin(), Maximal.end(), [](auto &a, auto &b) {
+	sort(Maximal.begin(), Maximal.end(), [](auto &a, auto &b) {
     	return a.size() > b.size();
-	});*/
+	});
 	cout << endl;
 	cout << "Clique Maximal: ";
 	for(int i : Maximal[0]) {
@@ -141,11 +146,11 @@ int main(){
 	vector<int> grafo[vert]; // um vetor de vetor que será usado como lista de adjacencia.
 	vector<int> R,P,X; // vetores auxiliares para o algoritmo de BronKerbosch.
 	CriaListaAdj(grafo);
-	//ImprimeDecrescente(grafo,vert);
+	ImprimeDecrescente(grafo,vert);
 	for (int i=1; i < vert; i++) {
     	P.push_back(i);
   }
   BronKerbosch(grafo,R,P,X);
-  ImprimeMaximal(grafo);
+  //ImprimeMaximal(grafo);
 	return 0;
 }
