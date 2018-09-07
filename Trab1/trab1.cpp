@@ -65,35 +65,127 @@ void CriaListaAdj(vector<int>  grafo[]){
 			i = 0;
 			grafo[s].push_back(t);
 			grafo[t].push_back(s);
+			
 		}
+		
 	}
 	file.close();
 }
 // Essa funcao imprime na tela as listas de adjacencia em ordem decrescente de grau do vertice.
 void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
-	vector<pair<int,int>> dueto;
-	int z = 0;
-	int grau=0;
-	for (int i = 1; i < vert; i++){
-        z = grafo[i].size();
-        dueto.push_back(pair<int,int>(i,z));
-        z = 0;
-    }
-	sort(dueto.begin(), dueto.end(), [](auto &a, auto &b) {
-    	return a.second > b.second;
-	});
- 	cout << endl<< "Vertices de MAIOR GRAU em ordem DECRESCENTE:" <<endl;
-	for (int w = 0; w < vert -1; ++w){
-        cout << "\n Vertice id: "<< dueto[w].first;
+		vector<pair<int,int>> dueto;
+		int zmanho = 0;
+		for (int i = 1; i < vert; i++){
+			zmanho = grafo[i].size();
+			dueto.push_back(pair<int,int>(i,zmanho));
+			zmanho = 0;
+		}
+		sort(dueto.begin(), dueto.end(), [](auto &a, auto &b) {
+			return a.second > b.second;
+		});
+		cout << endl<< "Vertices de MAIOR GRAU em ordem DECRESCENTE:" <<endl;
+		for (int w = 0; w < vert -1; ++w){
+			cout << "\n Vertice id: "<< dueto[w].first;
 
-        for (int j : grafo[dueto[w].first]){
-           //cout << " -> " << j;
-					 grau++;
-        }
-				cout << "\n grau: " << grau+1;
-				grau=0;
-        cout << endl;
-    }
+
+			for (int j : grafo[dueto[w].first]){
+			cout << " -> " << j;
+						
+			}
+					//cout << "\n grau: " << grau+1;
+					cout << "\n Grau: " << dueto[w].second;
+					
+			cout << endl;
+		}
+	}
+
+	void CoeficienteAglomeracao ( vector<int> grafo[], int vert, int x){
+	if (x == 1){
+		vector<pair<int,int>> pares;
+		int tam = 0;
+		for (int i = 1; i < vert; i++){
+			tam = grafo[i].size();
+			pares.push_back(pair<int,int>(i,tam));
+			tam = 0;
+		}
+
+		for (int j = 0; j < vert -1 ; j++){
+			cout << "\n  NO: " << pares[j].first << " --";
+			cout << " Vizinhos: " << pares[j].second;
+			
+			int trigPossiveis = pares[j].second * (pares[j].second-1);
+			trigPossiveis = trigPossiveis/2;
+			cout << "\nTriangulos Possiveis: " << trigPossiveis << endl;
+			// k = 1 ADJ de B
+			int t = 0;
+			for (int k : grafo[pares[j].first]){
+				//cout << "\n -> " << k;
+				t = 0;
+				// b = 1 ADJ de D
+				for (int b : grafo[k]) {
+					// c = 1 ADJ de B
+					for (int c : grafo[pares[j].first]){
+						//cout << " b: " << b;
+						if ( b == c){
+							t++;
+							//cout << "\n " << k;
+							//cout << " <-> " << c << endl;
+						}
+					}
+				}
+				
+			}
+			cout << "Triangulos Existentes: " << t << endl;
+			cout << "COEF de Aglomeração: " << t << "/" << trigPossiveis << endl;
+			cout << endl;
+		}
+
+	}else if (x == 2){
+		vector<pair<int,int>> pares;
+		int tam = 0;
+		for (int i = 1; i < vert; i++){
+			tam = grafo[i].size();
+			pares.push_back(pair<int,int>(i,tam));
+			tam = 0;
+		}
+		float media = 0;
+		for (int j = 0; j < vert -1 ; j++){
+			int trigPossiveis = pares[j].second * (pares[j].second-1);
+			trigPossiveis = trigPossiveis/2;
+			int t = 0;
+			for (int k : grafo[pares[j].first]){
+				t = 0;
+				for (int b : grafo[k]) {
+					for (int c : grafo[pares[j].first]){
+						if ( b == c){
+							t++;
+						}
+					}
+				}
+				
+			}
+			float div;
+			if (trigPossiveis != 0){
+				div = (float)t/(float)trigPossiveis;
+			}else{
+				div = 0;
+			}
+			
+			media = media + div;
+		}
+		float CoefMedio;
+		CoefMedio = 1.0/34.0;
+		
+		CoefMedio = CoefMedio * media;
+		cout << "\nCoeficiente de Aglomeração Medio do GRAFO: "<<CoefMedio << endl << endl;
+	}
+	// for (int i = 1; i < vert ; i++){
+	// 	cout << "\n no: " << i;
+	// 	for (int j : grafo[i]){
+	// 		cout << "  " << j;
+	// 	}
+	// }
+
 }
 // Impletação do algoritmo de Bron-Kerbosch para encontrar os cliques maximais
 void BronKerbosch(vector<int> grafo[], vector<int> R , vector<int> P , vector<int> X){
@@ -129,7 +221,8 @@ void ImprimeMaximal(vector<int> grafo[]){
 	});
 	cout << endl;
 	cout << "Cliques Maximais: "<< endl<< endl;
-	for (int j=0;j<35;j++){
+	int max = Maximal.size();
+	for (int j=0;j<max;j++){
 		cout << "Clique Maximal: "<< endl;
 		int h=0;
 		for(int i : Maximal[j]) {
@@ -166,8 +259,10 @@ int main(){
 				ImprimeMaximal(grafo);
 			break;
 		case 3:
+				CoeficienteAglomeracao(grafo,vert, 1);
 			break;
 		case 4:
+				CoeficienteAglomeracao(grafo,vert, 2);
 			break;
 	}
 	return 0;
