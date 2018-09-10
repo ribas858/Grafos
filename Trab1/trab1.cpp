@@ -1,26 +1,26 @@
-/* 	Universidade de Brasilia
-	Instituto de Ciencias Exatas
+/* 	Instituto de Ciencias Exatas
 	Departamento de Ciencia da Computacao
-	Teoria e Aplicação de Grafos - 1/2018
-	Alunos: Diego Antonio Barbosa cardoso -16/0005116 , Lucas Junior Ribas - 16/0052289
-	Versão do compilador:g++ (Ubuntu 7.2.0-8ubuntu3.2) 7.2.0
-	Descricao: Este progama Cria um grafo usando lista de adjacencia utilizando como entrada o arquivo "karate.gml"
-	ordena em ordem decrescente o vertice com maior grau e utiliza o algoritmo de Bron-Kerbosch para encontrar os cliques
-	maximais
-	Sites utilizados como exemplo : https://en.wikipedia.org/wiki/Bron%E2%80%93Kerbosch_algorithm
-	https://stackoverflow.com/questions/43759341/bron-kerbosch-algorithm-in-c?answertab=oldest#tab-top,
-	https://www.geeksforgeeks.org/graph-implementation-using-stl-for-competitive-programming-set-1-dfs-of-unweighted-and-undirected/
-	par executar utilize  g++ projet1.cpp -o projeto1 e depois utlize ./projeto1 lembrando que para o funcionamento adequado
-	do progama o arquivo "karate.gml" precisa estar no mesmo diretorio que ele.
+	Universidade de Brasilia
+	Teoria e Aplicação de Grafos - TAG - 2/2018
+	Alunos: 
+	-- Lucas Junior Ribas - 16/0052289
+	-- 
+	Versão do compilador: g++ (Ubuntu 5.4.0-6ubuntu1~16.04.10) 5.4.0 20160609
+	Descricao: O progama contido neste arquivo gera um grafo nao direcionado usando lista de adjacencia, utilizando como entrada o arquivo "karate.gml" e o
+	ordena em ordem decrescente, ou seja, do vertice com maior grau para o menor e tambem utiliza o algoritmo de Bron-Kerbosch para localizar os cliques
+	maximais.
+
+	Para que a execução do algoritmo ocorra corretamente é necessário que o comando "-std=c++14" sem aspas seja incluido na linha de compilação normal do C++,
+	 ou seja, para executar corretamente digite extamente assim "g++ -std=c++14 trab1.cpp -o t1" sem aspas, caso haja algum problema nos contacte.
 	 */
 
 #include <bits/stdc++.h>
 #include <iostream>
 using namespace std;
 
-vector<vector<int>> Maximal; // Esse vetor de vetor guarda os cliques maximais encontrados pelo algoritmo de Bron-Kerbosch.
+vector<vector<int>> Maximal; // Cliques maximais encontrados pelo algoritmo de Bron-Kerbosch.
 
-// Essa funcao entra no arquivo "karate.gml" e cria uma lista de adjacencia com base no seu conteudo.
+// Parser para o "karate.gml". Obs: Não foi utilizado o parser fornecido.
 void CriaListaAdj(vector<int>  grafo[]){
 	ifstream file;
 	file.open("karateT.gml", ios::in);
@@ -65,13 +65,11 @@ void CriaListaAdj(vector<int>  grafo[]){
 			i = 0;
 			grafo[s].push_back(t);
 			grafo[t].push_back(s);
-			
 		}
-		
 	}
 	file.close();
 }
-// Essa funcao imprime na tela as listas de adjacencia em ordem decrescente de grau do vertice.
+// Imprime em ordem decrescente de grau do vertice.
 void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 		vector<pair<int,int>> dueto;
 		int zmanho = 0;
@@ -98,7 +96,7 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 			cout << endl;
 		}
 	}
-
+	// Calcula o coeficiente de aglomeração do no e o medio, opção x==1 CoefNO, opção x==2 CoefMedio
 	void CoeficienteAglomeracao ( vector<int> grafo[], int vert, int x){
 	if (x == 1){
 		vector<pair<int,int>> pares;
@@ -108,11 +106,9 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 			pares.push_back(pair<int,int>(i,tam));
 			tam = 0;
 		}
-
 		for (int j = 0; j < vert -1 ; j++){
 			cout << "\n  NO: " << pares[j].first << " --";
 			cout << " Vizinhos: " << pares[j].second;
-			
 			int trigPossiveis = pares[j].second * (pares[j].second-1);
 			trigPossiveis = trigPossiveis/2;
 			cout << "\nTriangulos Possiveis: " << trigPossiveis << endl;
@@ -133,13 +129,11 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 						}
 					}
 				}
-				
 			}
 			cout << "Triangulos Existentes: " << t << endl;
 			cout << "COEF de Aglomeração: " << t << "/" << trigPossiveis << endl;
 			cout << endl;
 		}
-
 	}else if (x == 2){
 		vector<pair<int,int>> pares;
 		int tam = 0;
@@ -162,7 +156,6 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 						}
 					}
 				}
-				
 			}
 			float div;
 			if (trigPossiveis != 0){
@@ -170,12 +163,10 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 			}else{
 				div = 0;
 			}
-			
 			media = media + div;
 		}
 		float CoefMedio;
 		CoefMedio = 1.0/10.0;
-		
 		CoefMedio = CoefMedio * media;
 		cout << "\nCoeficiente de Aglomeração Medio do GRAFO: "<<CoefMedio << endl << endl;
 	}
@@ -241,9 +232,7 @@ int main(){
 	CriaListaAdj(grafo);
 	for (int i=1; i < vert; i++)
 			P.push_back(i);
-
 	BronKerbosch(grafo,R,P,X);
-
 	cout << "Digite uma opção:" << endl;
 	cout << "(1) o vértice, e seu respectivo grau (para todos os vértices)" << endl;
 	cout << "(2) todos os cliques maximais (indicando o número de vértices e quais)" << endl;
