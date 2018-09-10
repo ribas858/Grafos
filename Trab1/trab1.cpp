@@ -233,7 +233,7 @@ int main(){
 	CriaListaAdj(grafo);
 	for (int i=1; i < vert; i++)
 			P.push_back(i);
-	BronKerbosch(grafo,R,P,X)
+	BronKerbosch(grafo,R,P,X);
 	cout << "Digite uma opção:" << endl;
 	cout << "(1) o vértice, e seu respectivo grau (para todos os vértices)" << endl;
 	cout << "(2) todos os cliques maximais (indicando o número de vértices e quais)" << endl;
