@@ -78,10 +78,8 @@ void ImprimeVerticeDecrescente(vector<int> grafo[], int vert){
 			dueto.push_back(pair<int,int>(i,zmanho));
 			zmanho = 0;
 		}
-		sort(dueto.begin(), dueto.end(), [](auto &a, auto &b) {
-			return a.second > b.second;
-		});
-		cout << endl<< "Vertices de MAIOR GRAU em ordem DECRESCENTE:" <<endl;
+		
+		cout << endl<< "Vertices em ordem:" <<endl;
 		for (int w = 0; w < vert -1; ++w){
 			cout << "\n Vertice id: "<< dueto[w].first;
 
