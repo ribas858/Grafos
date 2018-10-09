@@ -1,3 +1,4 @@
+#define limit 40
 /*																					 
 O programa é compilado com: gcc -o namek namek.c										   
 executando no terminal: ./namek		
@@ -18,14 +19,26 @@ executando no terminal: ./namek
 #include <string.h>
 #include <stdbool.h>
 
-#define limit 40
 
+void mostraCurso (){
+	printf("\n\n\t\t===========================================\n");
+	printf("\t\t=Ciência da Computação ((( Bacharel ))).=\n");
+	printf("\t\t===========================================\n\n\n");
+}
+
+typedef struct pilhaStruct{
+	long int codicccg;
+	struct pilhaStruct *pilhaproximaA;
+}pilha;
+typedef struct filaStruct{
+	long int codicccgigo;
+	struct filaStruct *proximaA;
+}fila;
 typedef struct HEarco {
 	int used, valoracaoGR;
 	struct HEarco *pxarco;
 	struct NoElement *pxAdjacente;
 }arco;
-
 typedef struct NoElement {
 	int used, Cr, preReq, preReqAux;
 	float pesoPessoal;
@@ -34,74 +47,14 @@ typedef struct NoElement {
 	struct NoElement *noPx;
 	struct HEarco *ParcoAcess;
 }no;
-
-typedef struct filaStruct{
-	long int codicccgigo;
-	struct filaStruct *proximaA;
-}fila;
-
-typedef struct pilhaStruct{
-	long int codicccg;
-	struct pilhaStruct *pilhaproximaA;
-}pilha;
-
 no *inicioG;
-fila *filaE;
-pilha *maximaPilha, *PLatual;
+
+
 int maxvalor , ATvalor, maxATvalor = 0;
+pilha *maximaPilha, *PLatual;
+fila *filaE;
 
-/*Simples interface para usuário*/
-int Menu (){
-	bool erro = true;
-	int type;
-
-
-	printf("\t 1 - Grafo (lista de adjacencias).                                   \n");
-	printf("\t 2 - Ordenação Topologica.                                           \n");
-	printf("\t 3 - Caminho Critico								                   \n");
-	printf("\t 4 - Exit.                                                           \n");
-	do{
-		printf("\n\t\t>> Escolha uma.<<: ");
-		scanf("%d", &type);
-		if(type < 0 || type > 4){
-			erro = false;
-			printf("Tente de novo!!\n");
-		}
-		else
-			erro = true;
-	}while(!erro);
-	return type;
-}
-
-/*Funções basicas para fila e pilha*/
-/*A função inicializa um ponteiro para a pilha*/
-void Ipinlha(pilha **ePilha){
-	*ePilha = NULL;
-}
-
-/*A função EmptyPI retorna "falso ou verdadeiro" para a verificação se uma
-** pilha esta ou não vazia*/
-int EmptyPI (pilha *ePilha){
-	return (ePilha == NULL);
-}
-
-/*A função PilhaTop retorna o elemento que se encontra no topo da pilha*/
-long int PilhaTop (pilha *ePilha){
-	return ePilha->codicccg;
-}
-
-/*A função InsertPilha recebe um elemento e o ponteiro para a pilha, insere o elemento
-** e posiciona o ponteiro do topo da pilha para o ultimo elemento inserido na pilha.*/
-void InsertPilha (pilha **ePilha, long int codicccg){
-	pilha *pPilha;
-	pPilha = malloc (sizeof(pilha));
-	pPilha->codicccg = codicccg;
-	pPilha->pilhaproximaA = *ePilha;
-	*ePilha = pPilha;
-}
-
-/*A função tiraPilha remove o elemento no topo da pilha e reposiciona o ponteiro para o
-** proximaAimo elemento da pilha, recebe um ponteiro para a pilha como paramentro.*/
+/*retira do topo da pilha*/
 int tiraPilha (pilha **ePilha){
 	pilha *pPilha;
 	long int codicccg;
@@ -112,23 +65,26 @@ int tiraPilha (pilha **ePilha){
 	return codicccg;
 }
 
-/*A função Ifila é chamada para inicializar um ponteiro para a fila*/
+/*ve se a pilha esta vazia*/
+int EmptyPI (pilha *ePilha){
+	return (ePilha == NULL);
+}
+
+/*inicia fila*/
 void Ifila (fila **filaE){
 	*filaE = NULL;
 }
 
-/*A função Emptyfila retorna "falso ou verdadeiro" para
-**verificação da fila vazia ou não respectivamente.*/
+/*ve se a pilha esta vazia*/
 int Emptyfila (fila *filaE){
 	return (filaE == NULL);
 }
 
-/*A função frentFILA retorna o elemento que está sempre na frente da fila*/
+/*retorna o primeiro elemento da fila*/
 long int frentFILA (fila *filaE){
 	return filaE->codicccgigo;
 }
-/*A função InsereFILA insere um novo elemento no final da
-** fila sempre*/
+/*insere no final da fila*/
 void InsereFILA (fila **filaE, long int codicccg){
 	fila *pFila1, *pFila2;
 
@@ -145,9 +101,21 @@ void InsereFILA (fila **filaE, long int codicccg){
 	}
 }
 
-/*A função cutFila remove sempre o primeiro elemento
-** da fila, reposicionando o ponteiro para o proximaAimo elemento
-** da fila e retorna o elemento removido da fila*/
+/*inicia pilha*/
+void Ipinlha(pilha **ePilha){
+	*ePilha = NULL;
+}
+
+/*insere no topo da pilha*/
+void InsertPilha (pilha **ePilha, long int codicccg){
+	pilha *pPilha;
+	pPilha = malloc (sizeof(pilha));
+	pPilha->codicccg = codicccg;
+	pPilha->pilhaproximaA = *ePilha;
+	*ePilha = pPilha;
+}
+
+/*remove o primeiro elemento da fila */
 int cutFila (fila **filaE){
 	fila *pFila;
 	long int codicccg;
@@ -159,12 +127,12 @@ int cutFila (fila **filaE){
 	return codicccg;
 }
 
-/**
-** FUNÇÃO PARA CONSTRUÇAO DO GRAFO DIRECIONADO USANDO LISTAS LIGADA A LISTAS, COM ARCOS VALORADOS **
-** E COM NÓS E ARCOS COM CAMPOS BOOLEANOS (zero ou um). A FUNÇÃO LÊ DO ARQUIVO E GERA UM GRAFO A PARTIR DOS   **
-** DADOS LIDOS NO ARQUIVO, A CONSTRUÇÃO OCORRE EM DUAS INSTÂNCIAS DA LEITURA DO ARQUIVO, NA PRIMEIRA É
-** CONSTRUIDO UMA LISTA COM TODOS OS ELEMENTOS (Vértices) E NA SEGUNDA AS SUAS DEPENDÊNCIAS SÃO GERADAS.
-**/
+/*retorna topo da pilha*/
+long int PilhaTop (pilha *ePilha){
+	return ePilha->codicccg;
+}
+
+/*cria o grafo usando lista ligada a lista*/
 void CriaGrafo (no **einicioGcio){
 	FILE *arq;
 	no *pNo1, *pNo2, *pReq;
@@ -173,10 +141,7 @@ void CriaGrafo (no **einicioGcio){
 	int crd, i = 0;
 	float pesoPessoal;
 	long int codicccg, preReq;
-
 	memset(namek, '\0', limit);
-
-
 	*einicioGcio = NULL;
 	arq = fopen ("disciplinas.txt", "r");
 	if (arq == NULL)
@@ -189,7 +154,6 @@ void CriaGrafo (no **einicioGcio){
 				i++;
 			}
 			i = 0;
-
 			pNo1->codicccg = codicccg;
 			pNo1->Cr = crd;
 			pNo1->pesoPessoal = pesoPessoal;
@@ -206,7 +170,6 @@ void CriaGrafo (no **einicioGcio){
 		}
 		fclose (arq);
 		pNo1 = *einicioGcio;
-
 		pReq = *einicioGcio;
 		arq = fopen ("disciplinas.txt", "r");
 		while ((fscanf (arq, "%ld | %[^|] | %d | %f | ", &codicccg, namek, &crd, &pesoPessoal)) != EOF){
@@ -241,14 +204,12 @@ void CriaGrafo (no **einicioGcio){
 			}
 			c = ' ';
 			pNo1 = pNo1->noPx;
-
 		}
 	}
 	fclose (arq);
 }
 
-/*Lê o grafo construído visitando cada nó e mostrando todos os seus
-** adjacentes*/
+/*Lê o grafo*/
 void graforead (no *inicioG){
 	no *pNo1;
 	arco *pArc1 = NULL;
@@ -256,10 +217,10 @@ void graforead (no *inicioG){
 	if(inicioG == NULL)
 		printf("Grafo vazio\n");
 	else{
-		printf("\t\tGrafo Direcionado Acíclico.\n\n");
+		printf("\t\tGrafo DIRECIONADO.\n\n");
 		pNo1 = inicioG;
 		while(pNo1 != NULL){
-			printf("\n%ld: %s %d  %.1f", pNo1->codicccg, pNo1->namek, pNo1->Cr, pNo1->pesoPessoal);
+			printf("\nCODIGO DISCIPLINA:%ld<+> %s %d  %.1f", pNo1->codicccg, pNo1->namek, pNo1->Cr, pNo1->pesoPessoal);
 			if(pNo1->ParcoAcess != NULL)
 				pArc1 = pNo1->ParcoAcess;
 			else
@@ -274,11 +235,7 @@ void graforead (no *inicioG){
 	}
 }
 
-/*A função somaGrauada recebe o ponteiro do inicio do
-** grafo e conta o grau de entrada em todos os nós e
-** armazena o valor de entradas nos respectivos nós no campo preReq
-** e preReqAux que sera used para ordenação topologica sem perder o
-** numero de requisitos da disciplina original*/
+/*soma os graus dos nos de acordo com o pre-requisito*/
 void somaGrau(no *inicioG){
 	no *pNo;
 	arco *pArc;
@@ -297,30 +254,20 @@ void somaGrau(no *inicioG){
 	}
 }
 
-/*A função Otopologica recebe um ponteiro para o grafo e um ponteiro para uma fila
-** executa o pseudo código visto na aula (Kahn) para ordenação topologica de um DAG
-** a função usa fila para realizar a ordenação, o grafo é percorrido e os elementos com grau entr. zero
-** são inseridos na fila, para cada elemento retirado da fila, contador de nós visitados é incrementado
-** e o grau entr. dos vizinhos do nó são decrementado em 1, os vizinhos com graus entr. zero são incrementados
-** a fila e o processo segue até a fila ficar vazia. O número de nós visitados são comparadados com o número
-** de vértices no grafo para a verificação da possibilidade da ordenação.*/
+/*Ordenaçao topologica.*/
 void Otopologica(no *inicioG, fila **filaE){
 	fila *pFila;
 	no *pNo;
 	arco *pArc;
 	long int codicccgRetirado;
 	int noVisitado = 0, nNo = 0;
-
 	Ifila(&pFila);
 	pNo = inicioG;
-
-	/*Insere todos os nós com grau de entrada zero na fila*/
 	while(pNo != NULL){
 		if(pNo->preReqAux == 0)
 			InsereFILA(filaE, pNo->codicccg);
 		pNo = pNo->noPx;
 	}
-
 	pNo = inicioG;
 	while(!Emptyfila(*filaE)){
 		codicccgRetirado = cutFila(filaE);
@@ -329,7 +276,6 @@ void Otopologica(no *inicioG, fila **filaE){
 
 		while(pNo->codicccg != codicccgRetirado)
 			pNo = pNo->noPx;
-
 		if(pNo->ParcoAcess != NULL){
 			pArc = pNo->ParcoAcess;
 			while(pArc != NULL){
@@ -352,26 +298,20 @@ void Otopologica(no *inicioG, fila **filaE){
 		InsereFILA(filaE, cutFila(&pFila));
 }
 
-/*A função showOtopologica recebe um ponteiro para o grafo e outro para uma fila
-**com os elementos ordenado do grafo e impreme os elementos e os graus dos vértices entrantes.
-** O grafo ordenado não é apresentado de forma sequencial, mas sim em coluna onde a primeira linha
-** dos elementos do grafico é o primeiro elemento na sequencia da ordenação, o segundo elemento da coluna
-** é o segundo elemento na sequencia da ordenação, e assim por diante, considerando ordenação da esquerda
-** para direita.(-_-)*/
+/*mostra a ordenaçao topologica na tela*/
 void showOtopologica (no *inicioG, fila **filaE){
 	fila *pFila;
 	no *pGrafo;
-
 	pGrafo = inicioG;
 	if(Emptyfila(*filaE))
-		printf("Fila vazia.\n");
+		printf("FILA VAZIA.\n");
 	else{
-		printf("\t\t\n\nOrdenação topologica.\n");
+		printf("\t\t\n\n                ORDENACAO TOPOLOGICA.\n");
 		Ifila(&pFila);
 		while(!Emptyfila(*filaE)){
 			while(frentFILA(*filaE) != pGrafo->codicccg)
 				pGrafo = pGrafo->noPx;
-			printf("%ld:%s requisito necessário -> (%d)\n", frentFILA(*filaE), pGrafo->namek, pGrafo->preReq);
+			printf("CODIGO DISCIPLINA:%ld<+>%s === REQUISITO ==>> (%d)\n", frentFILA(*filaE), pGrafo->namek, pGrafo->preReq);
 			InsereFILA(&pFila, cutFila(filaE));
 			pGrafo = inicioG;
 		}
@@ -380,16 +320,11 @@ void showOtopologica (no *inicioG, fila **filaE){
 	}
 }
 
-/**A função AchaCaminhoCritico determina os caminhos criticos para cada bifurcação a partir de um dado nó.
-** Esta função recebe o ponteiro para um dado nó do grafo e a partir desta busca o maior caminho critico
-** para este no passado e guarda o caminho critico descoberto em uma pilha. Para cada caminho achado, os valores
-** são comparados e então salvos em maxvalor.*/
+/**nome auto-explicativo*/
 void AchaCaminhoCritico (no *pNo) {
   	arco *pArc;
   	long int codicccg;
-
   	InsertPilha (&PLatual, pNo->codicccg);
-
   	pArc = pNo->ParcoAcess;
   	pNo->used = 1;
   	if(pArc != NULL){
@@ -415,31 +350,22 @@ void AchaCaminhoCritico (no *pNo) {
 	}
 }
 
-/** A função calculaCCritico é uma função auxiliar para determinação do caminho critico em um grafo.
-** Recebe uma fila com os elementos da ordenação topologica e um ponteiro para o grafo. Ela retira cada elemento
-** da fila e passa esse elemento para função AchaCaminhoCritico como ponteiro no grafo para que esta ache um caminho
-** critico a partir deste nó. Mostra o caminho critico achado e o seu valor após passar todos os elementos da
-** fila para verificação do caminho critico. Para cada maior caminho recebido, verifica-se o maior com os já recebido
-** e então mostra o maior entre eles.*/
+/** calcula caminho critico*/
 void calculaCCritico (fila **filaE, no *inicioGcio) {
   long int partida, codicccg;
   no *pNo;
   pilha *paux1;
   fila *faux;
-
   Ifila(&faux);
   Ipinlha(&paux1);
   pNo = inicioGcio;
-
   if(inicioGcio != NULL){
 
   	while(!Emptyfila(*filaE)){
   		partida = cutFila(filaE);
   		InsereFILA(&faux, partida);
-
 	  	while(partida != pNo->codicccg)
 	    	pNo = pNo->noPx;
-
 	    if (pNo == NULL)
       		printf ("no nao encontrado\n");
     	else {
@@ -487,6 +413,26 @@ void calculaCCritico (fila **filaE, no *inicioGcio) {
   else
   	printf("\nGrafo vazio.\n\n");
 }
+int Menu (){
+	bool e = true;
+	int t;
+	printf("\t 1 - Grafo (lista de adjacencias).                                   \n");
+	printf("\t 2 - Ordenação Topologica.                                           \n");
+	printf("\t 3 - Caminho Critico								                   \n");
+	printf("\t 4 - Exit.                                                           \n");
+	do{
+		printf("\n\t\t>> Escolha uma.<<: ");
+		scanf("%d", &t);
+		if(t < 0 || t > 4){
+			e = false;
+			printf("Tente de novo!!\n");
+		}
+		else
+			e = true;
+	}while(!e);
+	return t;
+}
+
 bool DetFunc (){
 	int type;
 
@@ -504,16 +450,10 @@ bool DetFunc (){
 		case 4:
 			return false;
 		default:
-			printf("Erro na escolha de opção.");
+			printf("e na escolha de opção.");
 			break;
 	}
 	return true;
-}
-
-void mostraCurso (){
-	printf("\n\n\t\t===========================================\n");
-	printf("\t\t=Ciência da Computação ((( Bacharel ))).=\n");
-	printf("\t\t===========================================\n\n\n");
 }
 
 int main (void){
