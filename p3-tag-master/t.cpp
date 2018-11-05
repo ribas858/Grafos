@@ -154,7 +154,9 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
                   if((esc[pos].vagas != 0) && (esc[pos].hab == prof[j].hab)){
                       prof[j].casado = true;
                       esc[pos].vagas --;
-                      casamentos.push_back(make_pair(prof[j].name, esc[pos].name));
+                      if (casamentos.size() < 70) {
+                      	casamentos.push_back(make_pair(prof[j].name, esc[pos].name));
+                      }
                   }
                 }
             }
@@ -166,10 +168,6 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
 }
 
 void printCasamento(){
-    cout << "Casamentos estaveis: " <<endl<<endl;
-    cout << "habilitacao 1 - 2 vagas ---- 8  prof" << endl;
-    cout << "habilitacao 2 - 50 vagas ---- 40 profs" <<endl;
-    cout << "habilitacao 3 - 32 vagas ---- 17 profs" << endl << endl;
 
     for (int i = 0; i != casamentos.size(); i++){
         cout << casamentos[i].first << "----"<< casamentos[i].second << endl;
@@ -182,4 +180,5 @@ int main(){
     criaListaPref(prof,esc);
     galeShapley(prof,esc);
     printCasamento();
+    cout << " " << casamentos.size() << " Emparelhamentos maximos" << endl;
 }
