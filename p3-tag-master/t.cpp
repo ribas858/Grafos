@@ -1,16 +1,19 @@
-/* 	Universidade de Brasilia
-	Instituto de Ciencias Exatas
+/* 	
+	Teoria e Aplicação de Grafos - 2/2018
+	
+	Universidade de Brasilia
+
 	Departamento de Ciencia da Computacao
-	Teoria e Aplicação de Grafos - 1/2018
-	Alunos: Diego Antonio Barbosa cardoso -16/0005116 , Lucas Junior Ribas - 16/0052289
-	Versão do compilador:g++ (Ubuntu 5.4.0-6ubuntu1~16.04.9) 5.4.0 20160609
-	Descricao: Este progama faz o maior emparelhamento estavel entre professores e escolas descrito no arquivo de entrada
-	Sites utilizados como referencia :
-    https://en.wikipedia.org/wiki/Stable_marriage_problem
-    https://www.geeksforgeeks.org/stable-marriage-problem/
-	Para executar utilize  g++ -std=c++11 t.cpp -o t e depois utlize ./t lembrando que para o funcionamento adequado
-	do progama o arquivo : entradaProj3TAG.txt  deve estar no mesmo diretorio do arquvio t.cpp
+	
+	Alunos: 
+		Lucas Junior Ribas - 16/0052289
+		Marcelo Giordano Martins Costa de Oliveira - 12/0037301
+
+	Execução  g++ -std=c++11 t.cpp -o t e depois ./t
+	
+	Deixe o arquivo entradaProj3TAG.txt no mesmo diretorio.
 */
+
 #include <iostream>
 #include <vector>
 #include <fstream>
@@ -168,9 +171,27 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
 }
 
 void printCasamento(){
-
+	int j;
+	j = 0;
     for (int i = 0; i != casamentos.size(); i++){
-        cout << casamentos[i].first << "----"<< casamentos[i].second << endl;
+    	j++;
+    	if (casamentos[i].first.size() == 2 && casamentos[i].second.size() == 2){
+    		cout << casamentos[i].first << " ----"<< casamentos[i].second << "  ";
+    	}else{
+	    	if( casamentos[i].first.size() == 2) {
+	        	cout << casamentos[i].first << " ----"<< casamentos[i].second << " ";
+	        }else{
+	        	if ( casamentos[i].second.size() == 2){
+	        		cout << casamentos[i].first << "----"<< casamentos[i].second << "  ";
+	        	}else{
+	        		cout << casamentos[i].first << "----"<< casamentos[i].second << " ";
+	        	}
+	        }
+	    }
+        if (j == 6 ){
+        	cout << endl;
+        	j = 0;
+        }
     }
 }
 
@@ -180,5 +201,5 @@ int main(){
     criaListaPref(prof,esc);
     galeShapley(prof,esc);
     printCasamento();
-    cout << " " << casamentos.size() << " Emparelhamentos maximos" << endl;
+    cout << endl << " " << casamentos.size() << " Emparelhamentos maximos" << endl;
 }
