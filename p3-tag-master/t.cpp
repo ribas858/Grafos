@@ -63,7 +63,7 @@ void criaListaPref(vector<Professor>& prof, vector<Escola>& esc){
     int spacecount = 0;
     while(getline(file,linha)){
         if(linha.length()>35){
-            if (linha == "//escolas e preferencias em termos de habilitacoes "){
+            if (linha == "//escolas e preferencias em termos de habilitacoes"){
                 flag = 1;
             }
         }
@@ -120,7 +120,7 @@ void criaListaPref(vector<Professor>& prof, vector<Escola>& esc){
                 esc.push_back(e);
                 spacecount = 0;
                 sub = "";
-            }  
+            }
         }
     }
 }
@@ -139,7 +139,7 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
     int pos =0;
     string sub;
     string num = "";
-    while( i != 0){ 
+    while( i != 0){
         while(j != 99){
             if(prof[j].casado == false){
                 for(int k = 0 ; k != 5 ; k++){
@@ -162,14 +162,14 @@ void galeShapley(vector<Professor> prof, vector<Escola> esc){
         }
         i--;
     }
-    
+
 }
 
 void printCasamento(){
     cout << "Casamentos estaveis: " <<endl<<endl;
-    cout << "hablitacao 1 - 16 vagas ---- 8  prof" << endl;
-    cout << "hablitacao 2 - 40 vagas ---- 40 profs" <<endl;
-    cout << "hablitacao 3 - 24 vagas ---- 17 profs" << endl << endl;
+    cout << "habilitacao 1 - 2 vagas ---- 8  prof" << endl;
+    cout << "habilitacao 2 - 50 vagas ---- 40 profs" <<endl;
+    cout << "habilitacao 3 - 32 vagas ---- 17 profs" << endl << endl;
 
     for (int i = 0; i != casamentos.size(); i++){
         cout << casamentos[i].first << "----"<< casamentos[i].second << endl;
